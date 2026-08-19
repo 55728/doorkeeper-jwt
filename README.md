@@ -1,6 +1,6 @@
 [![Gem Version](https://badge.fury.io/rb/doorkeeper-jwt.svg)](https://rubygems.org/gems/doorkeeper-jwt)
 [![Coverage Status](https://coveralls.io/repos/github/doorkeeper-gem/doorkeeper-jwt/badge.svg?branch=master)](https://coveralls.io/github/doorkeeper-gem/doorkeeper-jwt?branch=master)
-[![Build Status](https://travis-ci.org/doorkeeper-gem/doorkeeper-jwt.svg?branch=master)](https://travis-ci.org/doorkeeper-gem/doorkeeper-jwt)
+[![CI](https://github.com/doorkeeper-gem/doorkeeper-jwt/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/doorkeeper-gem/doorkeeper-jwt/actions/workflows/ci.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/ca4d81b49acabda27e0c/maintainability)](https://codeclimate.com/github/doorkeeper-gem/doorkeeper-jwt/maintainability)
 
 # Doorkeeper::JWT
