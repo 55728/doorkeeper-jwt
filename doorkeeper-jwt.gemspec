@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
 
   spec.metadata = {
     "homepage_uri" => "https://github.com/doorkeeper-gem/doorkeeper-jwt",
-    "changelog_uri" => "https://github.com/doorkeeper-gem/doorkeeper-jwt/blob/main/CHANGELOG.md",
+    "changelog_uri" => "https://github.com/doorkeeper-gem/doorkeeper-jwt/blob/master/CHANGELOG.md",
     "source_code_uri" => "https://github.com/doorkeeper-gem/doorkeeper-jwt",
     "bug_tracker_uri" => "https://github.com/doorkeeper-gem/doorkeeper-jwt/issues",
     "funding_uri" => "https://opencollective.com/doorkeeper-gem",
