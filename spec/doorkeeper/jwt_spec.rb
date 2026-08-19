@@ -101,15 +101,19 @@ describe Doorkeeper::JWT do
       expect(decoded_token[1]["alg"]).to eq "HS256"
     end
 
-    it "creates a signed JWT token using the deprecated signing_method" do
+    it "creates a signed JWT token using the deprecated encryption_method" do
+      allow(Kernel).to receive(:warn)
+
       described_class.configure do
         token_payload do
           { foo: "bar" }
         end
 
         secret_key "super secret"
-        signing_method :hs256
+        encryption_method :hs256
       end
+
+      expect(Kernel).to have_received(:warn).with(/deprecated/)
 
       token = described_class.generate({})
       algorithm = { algorithm: "HS256" }
