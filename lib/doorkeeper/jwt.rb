@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "doorkeeper/jwt/version"
+require "doorkeeper/jwt/errors"
 require "doorkeeper/jwt/config"
 require "jwt"
 
@@ -14,6 +15,12 @@ module Doorkeeper
           signing_method,
           token_headers(opts)
         )
+      end
+
+      def signing_key_configured?
+        use_application_secret? ||
+          !Doorkeeper::JWT.configuration.secret_key.nil? ||
+          !Doorkeeper::JWT.configuration.secret_key_path.nil?
       end
 
       private
@@ -44,9 +51,23 @@ module Doorkeeper
       end
 
       def signing_method
-        return "none" unless Doorkeeper::JWT.configuration.signing_method
+        method = Doorkeeper::JWT.configuration.signing_method
+        return method.to_s.upcase unless method.nil?
 
-        Doorkeeper::JWT.configuration.signing_method.to_s.upcase
+        if signing_key_configured?
+          raise(
+            SigningMethodMissing,
+            "JWT `signing_method` is not configured, but a signing key is." \
+            " Refusing to issue an unsigned (alg: none) token. Set" \
+            " `signing_method` explicitly, e.g. `signing_method :hs512`."
+          )
+        end
+
+        Kernel.warn(
+          "[DOORKEEPER-JWT]: No `signing_method` configured; issuing UNSIGNED" \
+          " tokens (alg: none). This will become an error in a future release."
+        )
+        "none"
       end
 
       def use_application_secret?

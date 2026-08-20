@@ -6,6 +6,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## master
 
+- **Security**: Raise `Doorkeeper::JWT::SigningMethodMissing` instead of issuing an unsigned (`alg: none`) JWT when a signing key is configured but `signing_method` is not. Issuing unsigned tokens with no signing key at all now warns and will become an error in a future release
 - Add your entry here
 
 ## [0.4.3] - 2026-07-20

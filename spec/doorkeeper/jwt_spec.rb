@@ -54,15 +54,51 @@ describe Doorkeeper::JWT do
     it "creates a signed JWT token" do
       described_class.configure do
         secret_key "super secret"
+        signing_method :hs256
       end
 
       token = described_class.generate({})
-      decoded_token = ::JWT.decode(token, "super secret", false)
+      algorithm = { algorithm: "HS256" }
+      decoded_token = ::JWT.decode(token, "super secret", true, algorithm)
 
       expect(decoded_token[0]).to be_a(Hash)
       expect(decoded_token[0]["token"]).to be_a(String)
       expect(decoded_token[1]).to be_a(Hash)
-      expect(decoded_token[1]["alg"]).to eq "none"
+      expect(decoded_token[1]["alg"]).to eq "HS256"
+    end
+
+    it "refuses to issue an unsigned token when a secret_key is configured" do
+      described_class.configure do
+        secret_key "super secret"
+      end
+
+      expect { described_class.generate({}) }
+        .to raise_error(Doorkeeper::JWT::SigningMethodMissing, /Refusing to issue an unsigned/)
+    end
+
+    it "refuses to issue an unsigned token when a secret_key_path is configured" do
+      described_class.configure do
+        secret_key_path "spec/support/1024key.pem"
+      end
+
+      expect { described_class.generate({}) }
+        .to raise_error(Doorkeeper::JWT::SigningMethodMissing, /Refusing to issue an unsigned/)
+    end
+
+    it "refuses to issue an unsigned token when use_application_secret is enabled" do
+      described_class.configure do
+        use_application_secret true
+      end
+
+      expect { described_class.generate(application: { secret: "secret" }) }
+        .to raise_error(Doorkeeper::JWT::SigningMethodMissing, /Refusing to issue an unsigned/)
+    end
+
+    it "warns when issuing an unsigned token with no signing key configured" do
+      described_class.configure {}
+
+      expect { described_class.generate({}) }
+        .to output(/issuing UNSIGNED/).to_stderr
     end
 
     it "creates a signed JWT token using hs256" do
@@ -322,6 +358,38 @@ describe Doorkeeper::JWT do
           raise_error.with_message(/secret strategy doesn't/)
         )
       end
+    end
+  end
+
+  describe ".signing_key_configured?" do
+    it "is true when a secret_key is configured" do
+      described_class.configure do
+        secret_key "super secret"
+      end
+
+      expect(described_class.signing_key_configured?).to be true
+    end
+
+    it "is true when a secret_key_path is configured" do
+      described_class.configure do
+        secret_key_path "spec/support/1024key.pem"
+      end
+
+      expect(described_class.signing_key_configured?).to be true
+    end
+
+    it "is true when use_application_secret is enabled" do
+      described_class.configure do
+        use_application_secret true
+      end
+
+      expect(described_class.signing_key_configured?).to be true
+    end
+
+    it "is false when no signing key is configured" do
+      described_class.configure {}
+
+      expect(described_class.signing_key_configured?).to be false
     end
   end
 end
