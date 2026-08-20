@@ -103,6 +103,40 @@ Doorkeeper::JWT.configure do
 end
 ```
 
+### Authenticating more than one model
+
+`opts[:resource_owner_id]` alone does not tell the payload block which model the token belongs to, so an application
+with several resource owner models (say, `Driver` and `Client`) cannot look the owner up from the id.
+
+Doorkeeper 5.4 and newer can hand the owner record itself to the generator. Run the generator, which enables
+`use_polymorphic_resource_owner` in the `Doorkeeper.configure` block and creates the migration that adds the
+`resource_owner_type` columns, then apply the migration:
+
+    $ rails generate doorkeeper:enable_polymorphic_resource_owner
+    $ rails db:migrate
+
+The payload block then receives the record as `opts[:resource_owner]`, so the payload can branch on its class:
+
+```ruby
+Doorkeeper::JWT.configure do
+  token_payload do |opts|
+    owner = opts[:resource_owner]
+
+    # client credentials tokens have no resource owner
+    next { sub: opts[:application]&.uid } unless owner
+
+    # ids are only unique per model, so include the model name in `sub`
+    {
+      sub: "#{owner.class.name.underscore}:#{owner.id}",
+      owner_type: owner.class.name,
+      email: owner.email
+    }
+  end
+end
+```
+
+Tokens issued by the client credentials flow have no resource owner, so `opts[:resource_owner]` is `nil` there.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt
