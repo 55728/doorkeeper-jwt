@@ -7,6 +7,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ## master
 
 - Fix `[DOORKEEPER] Option ... already defined and will be overridden` warnings on gem load [#61](https://github.com/doorkeeper-gem/doorkeeper-jwt/pull/61)
+- Declare `doorkeeper >= 5.4` as a runtime dependency and verify the supported range on CI [#64](https://github.com/doorkeeper-gem/doorkeeper-jwt/pull/64)
 - Add your entry here
 
 ## [0.4.3] - 2026-07-20
