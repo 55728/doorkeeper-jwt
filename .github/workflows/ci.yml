@@ -8,9 +8,10 @@ permissions:
 jobs:
   build:
     name: >-
-      Ruby ${{ matrix.ruby }}
+      Ruby ${{ matrix.ruby }} / Doorkeeper ${{ matrix.doorkeeper }}
     env:
       CI: true
+      DOORKEEPER_VERSION: ${{ matrix.doorkeeper }}
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' || matrix.experimental }}
     if: |
@@ -24,6 +25,11 @@ jobs:
         ruby:
           - '3.0'
           - '3.1'
+        # The minimum declared in the gemspec and the latest release. 5.4 is the oldest
+        # version whose options DSL resolves against our own config builder.
+        doorkeeper:
+          - '5.4.0'
+          - 'latest'
     steps:
       - name: Repo checkout
         uses: actions/checkout@v2
@@ -33,6 +39,8 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
+          # Each Doorkeeper pin resolves to a different bundle.
+          cache-version: doorkeeper-${{ matrix.doorkeeper }}
 
       - name: Run tests
         timeout-minutes: 10

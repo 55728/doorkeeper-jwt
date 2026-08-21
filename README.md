@@ -5,11 +5,21 @@
 
 # Doorkeeper::JWT
 
-Doorkeeper JWT adds JWT token support to the Doorkeeper OAuth library. Confirmed to work with Doorkeeper 2.2.x - 4.x.
-Untested with later versions of Doorkeeper.
+Doorkeeper JWT adds JWT token support to the Doorkeeper OAuth library.
 
-```ruby
-gem 'doorkeeper'
+## Compatibility
+
+Requires Doorkeeper 5.4 or newer. Doorkeeper 5.0 and earlier cannot load this gem at all, because they ship no
+`doorkeeper/config/option`. Doorkeeper 5.1 - 5.3 load it but misconfigure it: their options DSL defines the
+methods on Doorkeeper's own config builder instead of this gem's.
+
+The minimum supported version and the latest release run on every CI build - see the `doorkeeper` axis of the matrix
+in [`.github/workflows/ci.yml`](.github/workflows/ci.yml). To check a version that is not covered there, point the
+test suite at it:
+
+```console
+$ DOORKEEPER_VERSION=5.6.0 bundle install
+$ DOORKEEPER_VERSION=5.6.0 bundle exec rake test
 ```
 
 ## Installation

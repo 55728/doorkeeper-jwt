@@ -30,10 +30,12 @@ Gem::Specification.new do |spec|
     "funding_uri" => "https://opencollective.com/doorkeeper-gem",
   }
 
+  # Loaded at require time by lib/doorkeeper/jwt/config.rb. The options DSL it
+  # relies on only resolves against our own builder since Doorkeeper 5.4.
+  spec.add_dependency "doorkeeper", ">= 5.4"
   spec.add_dependency "jwt", ">= 2.1"
 
   spec.add_development_dependency "bundler", ">= 1.16"
-  spec.add_development_dependency "doorkeeper"
   spec.add_development_dependency "pry", "~> 0"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.8"
