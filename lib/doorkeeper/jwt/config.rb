@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 require "doorkeeper/config/option"
+require "doorkeeper/jwt/errors"
 
 module Doorkeeper
   module JWT
-    class MissingConfiguration < StandardError
+    class MissingConfiguration < Error
       def initialize
         super("Configuration for doorkeeper-jwt missing.")
       end
