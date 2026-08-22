@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
 
   spec.summary = "JWT token generator for Doorkeeper"
   spec.description = "JWT token generator extension for Doorkeeper"
-  spec.homepage = "https://github.com/chriswarren/doorkeeper-jwt"
+  spec.homepage = "https://github.com/doorkeeper-gem/doorkeeper-jwt"
   spec.license = "MIT"
 
   spec.bindir = "exe"
